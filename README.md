@@ -78,6 +78,10 @@ ansible-playbook -i inventory main.yml --tags "package,vscode"
 ## Customization
 You can customize tasks with _variables.yml_ file.
 
+## Screenshot of my terminal
+
+![Image of my terminal](https://raw.githubusercontent.com/iesen/mac-env-setup/main/ss.png)
+
 ## Future work
 * Playbook for updating pacakges and software (with version options)
 
