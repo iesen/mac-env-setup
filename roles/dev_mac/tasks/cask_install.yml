@@ -1,0 +1,5 @@
+---
+- name: "[CASK_INSTALL] Install {{ item }}"
+  community.general.homebrew_cask:
+    name: "{{ item }}"
+    state: present

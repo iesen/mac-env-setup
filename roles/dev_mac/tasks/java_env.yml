@@ -1,0 +1,10 @@
+---
+- name: "[JAVA] Create symlink for system java wrappers"
+  ansible.builtin.file:
+    src: /usr/local/opt/openjdk@11/libexec/openjdk.jdk
+    dest: /Library/Java/JavaVirtualMachines/openjdk-11.jdk
+    state: link
+    force: true
+    follow: false
+  become: true
+  when: java_create_symlink_for_system_java

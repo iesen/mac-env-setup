@@ -1,0 +1,37 @@
+---
+- name: "[TERMINAL_CUSTOM_ZSH_CONTENT] Check pyenv"
+  ansible.builtin.command: command -v pyenv >/dev/null 2>&1
+  ignore_errors: true
+  changed_when: false
+  register: is_pyenv_exists
+  when: zsh_configure_pyenv_init
+
+- name: "[TERMINAL_CUSTOM_ZSH_CONTENT] Configure zshrc"
+  ansible.builtin.blockinfile:
+    dest: "{{ user_home_dir }}/.zshrc"
+    marker: "# ##### {mark} TY-ENV-SETUP custom-zshrc #####"
+    block: |
+      {% if zsh_configure_pyenv_init and is_pyenv_exists.rc == 0 %}
+      # Init pyenv
+      if command -v pyenv 1>/dev/null 2>&1; then
+        eval "$(pyenv init -)"
+      fi
+      {% endif %}
+      {% if zsh_configure_colors %}
+      # Colors
+      unset LSCOLORS
+      export CLICOLOR=1
+      export CLICOLOR_FORCE=1
+      {% endif %}
+      {% if zsh_configure_nomatch %}
+      # Don't require escaping globbing characters in zsh. (command runs even if no match is found)
+      unsetopt nomatch
+      {% endif %}
+  
+- name: "[TERMINAL_CUSTOM_ZSH_CONTENT] Setup kubectx prompt"
+  ansible.builtin.blockinfile:
+    dest: "{{ user_home_dir }}/.zshrc"
+    marker: "# ##### {mark} TY-ENV-SETUP kube cli #####"
+    block: |
+      source {{ user_home_dir }}/.oh-my-zsh/plugins/kube-ps1/kube-ps1.plugin.zsh      
+  when: "'kube-ps1' in zsh_plugins_enabled"

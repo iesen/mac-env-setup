@@ -1,0 +1,11 @@
+---
+- name: "[PRE_TASKS_CASK_SUDO] Check if brew cask {{ item }} installed"
+  ansible.builtin.shell: "brew list --cask {{ item }}"
+  changed_when: false
+  ignore_errors: true
+  register: cask_check
+
+- name: "[PRE_TASKS_CASK_SUDO] Set sudo cask flag"
+  ansible.builtin.set_fact:
+    cask_will_be_installed_with_sudo: true
+  when: cask_check.rc != 0

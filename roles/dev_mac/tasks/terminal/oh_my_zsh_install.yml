@@ -1,0 +1,44 @@
+---
+- name: "[TERMINAL_OH_MY_ZSH] Check oh-my-zsh exists"
+  ansible.builtin.stat:
+    path: "{{ user_home_dir }}/.oh-my-zsh"
+  register: oh_my_zsh_result
+
+- name: "[TERMINAL_OH_MY_ZSH] Clone latest oh-my-zsh install script"
+  ansible.builtin.get_url:
+    url: https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh
+    dest: "{{ user_home_dir }}/_oh_my_zsh_install.sh"
+    force: true
+    mode: "0744"
+  when: not oh_my_zsh_result.stat.exists
+
+- name: "[TERMINAL_OH_MY_ZSH] Run oh-my-zsh setup script"
+  ansible.builtin.shell: "{{ user_home_dir }}/_oh_my_zsh_install.sh --unattended"
+  when: not oh_my_zsh_result.stat.exists
+
+- name: "[TERMINAL_OH_MY_ZSH] Cleanup oh-my-zsh install script"
+  ansible.builtin.file:
+    path: "{{ user_home_dir }}/_oh_my_zsh_install.sh"
+    state: absent
+  when: not oh_my_zsh_result.stat.exists
+
+- name: "[TERMINAL_OH_MY_ZSH] Read pre oh-my-zsh .zshrc"
+  ansible.builtin.stat:
+    path: "{{ user_home_dir }}/.zshrc.pre-oh-my-zsh"
+  register: pre_oh_my_zsh_file
+  when: not oh_my_zsh_result.stat.exists
+
+- name: "[TERMINAL_OH_MY_ZSH] Append pre oh-my-zsh .zshrc"
+  ansible.builtin.shell:
+    cmd: "cat {{ user_home_dir }}/.zshrc.pre-oh-my-zsh >> {{ user_home_dir }}/.zshrc"
+  when: not oh_my_zsh_result.stat.exists and pre_oh_my_zsh_file.stat.exists
+
+- name: "[TERMINAL_OH_MY_ZSH] Fix permissions of zsh completion files"
+  ansible.builtin.file:
+    path: "{{ item }}"
+    mode: "0744"
+    state: directory
+  ignore_errors: true
+  loop:
+    - /usr/local/share/zsh
+    - /usr/local/share/zsh/site-functions

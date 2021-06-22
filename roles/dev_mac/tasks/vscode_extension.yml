@@ -1,0 +1,10 @@
+---  
+- name: "[VS_CODE_EXT] Check vscode extension {{ item }}"
+  ansible.builtin.shell: "code --list-extensions | grep -i {{ item }}"
+  changed_when: false
+  ignore_errors: true
+  register: extension_check
+
+- name: "[VS_CODE_EXT] Install vscode extension {{ item }}"
+  ansible.builtin.command: "code --install-extension {{ item }}"
+  when: extension_check.rc == 1

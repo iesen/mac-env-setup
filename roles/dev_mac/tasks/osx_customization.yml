@@ -1,0 +1,96 @@
+---
+- name: "[OSX_CUSTOMIZATION] Configure show date on menubar"
+  community.general.osx_defaults:
+    domain: com.apple.menuextra.clock
+    key: ShowDay
+    type: bool
+    value: "{{ osx_menubar_showday }}"
+  notify:
+    - Menubar changed
+    
+- name: "[OSX_CUSTOMIZATION] Configure date format on menubar"
+  community.general.osx_defaults:
+    domain: com.apple.menuextra.clock
+    key: DateFormat
+    type: string
+    value: "{{ osx_menubar_dateformat }}"
+  notify:
+    - Menubar changed
+
+- name: "[OSX_CUSTOMIZATION] Expand save panel by default"
+  community.general.osx_defaults:
+    key: NSNavPanelExpandedStateForSaveMode
+    type: bool
+    value: "{{ osx_expand_save_panel }}"
+  notify: Restart finder
+
+- name: "[OSX_CUSTOMIZATION] Show status bar"
+  community.general.osx_defaults:
+    domain: com.apple.finder
+    key: ShowStatusBar
+    type: bool
+    value: "{{ osx_show_status_bar }}"
+  notify: Restart finder
+
+- name: "[OSX_CUSTOMIZATION] Show hidden files"
+  community.general.osx_defaults:
+    domain: com.apple.finder
+    key: AppleShowAllFiles
+    type: bool
+    value: "{{ osx_show_hidden_files }}"
+  notify: Restart finder
+
+- name: "[OSX_CUSTOMIZATION] Show all file extensions"
+  community.general.osx_defaults:
+    domain: com.apple.finder
+    key: AppleShowAllExtensions
+    type: bool
+    value: "{{ osx_show_all_file_extensions }}"
+  notify: Restart finder
+
+- name: "[OSX_CUSTOMIZATION] Show path bar"
+  community.general.osx_defaults:
+    domain: com.apple.finder
+    key: ShowPathbar
+    type: bool
+    value: "{{ osx_show_path_bar }}"
+  notify: Restart finder
+
+- name: "[OSX_CUSTOMIZATION] Enable selection on finder quick look"
+  community.general.osx_defaults:
+    domain: com.apple.finder
+    key: FXEnableExtensionChangeWarning
+    type: bool
+    value: "{{ osx_enable_file_extension_change_warning }}"
+  notify: Restart finder
+
+- name: "[OSX_CUSTOMIZATION] Set Finder default view style"
+  community.general.osx_defaults:
+    domain: com.apple.finder
+    key: FXPreferredViewStyle
+    type: string
+    value: "{{ osx_finder_default_view_style }}"
+  notify: Restart finder
+
+- name: "[OSX_CUSTOMIZATION] Install dockutil"
+  import_tasks: brew_install.yml
+  vars:
+    item: dockutil
+  when: osx_dock_configure
+
+- name: "[OSX_CUSTOMIZATION] Add item to dock"
+  include_tasks: osx_dock_item_add.yml
+  loop: "{{ osx_dock_add_apps }}"
+  when: osx_dock_configure
+
+- name: "[OSX_CUSTOMIZATION] Ensure key binding folder exists"
+  ansible.builtin.file:
+    path: "{{ user_home_dir }}/Library/KeyBindings"
+    state: directory
+  when: osx_customize_key_bindings
+
+- name: "[OSX_CUSTOMIZATION] Add key binding customizations"
+  ansible.builtin.copy:
+    src: "{{ osx_keybindings_customizations_file }}"
+    dest: "{{ user_home_dir }}/Library/KeyBindings/DefaultKeyBinding.dict"
+  when: osx_customize_key_bindings

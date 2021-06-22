@@ -1,0 +1,8 @@
+---
+- name: "[SSH_KEY_CONFIG] Include ssh key secret variables"
+  ansible.builtin.include_vars:
+    file: "{{ secret_file_path }}"
+
+- name: "[SSH_KEY_CONFIG] Manage ssh keys for git"
+  include_tasks: ssh_key_git.yml
+  loop: "{{ ssh_key_git_keys }}"

@@ -1,0 +1,133 @@
+---
+# Most tasks depend on user home path (default current user home directory)
+user_home_dir: "{{ ansible_env.HOME }}"
+# Secret file to use when needed
+secret_file_path: "secret.yml"
+### Brew packages
+# Brew casks to install using sudo
+brew_cask_apps_to_install_with_sudo:
+    - zoom
+# Brew casks to install
+brew_cask_apps_to_install:
+  - notion
+  - visual-studio-code
+  - jetbrains-toolbox
+  - slack
+  - spotify
+  - google-chrome
+  - brave-browser
+  - postman
+  - docker
+# Brew packages to install
+brew_packages_to_install:
+  - git
+  - openjdk@11
+  - nvm
+  - go
+  - kubectl
+  - kubectx
+  - tmux
+  - jq
+  - pygments
+  - k9s
+### zsh configuration
+zsh_configure_pyenv_init: true
+zsh_configure_nomatch: true
+zsh_configure_colors: true
+zsh_plugins_enabled:
+  - git
+  - kubectl
+  - kube-ps1
+  - docker
+  - history
+  - golang
+  - gradle
+  - mvn
+  - history-substring-search
+  - command-not-found
+  - common-aliases
+  - colored-man-pages
+  - colorize
+  - ssh-agent
+  - rand-quote
+  - tmux
+  - z
+  - zsh-autosuggestions
+  - zsh-syntax-highlighting
+oh_my_zsh_plugins_to_install:
+  - name: zsh-autosuggestions
+    url: https://github.com/zsh-users/zsh-autosuggestions
+  - name: zsh-syntax-highlighting
+    url: https://github.com/zsh-users/zsh-syntax-highlighting.git
+oh_my_zsh_install_enabled: true
+oh_my_zsh_configuration_enabled: true
+oh_my_zsh_nerd_fonts_to_install:
+  - font-hack-nerd-font
+  - font-sauce-code-pro-nerd-font
+  - font-meslo-lg-nerd-font
+# sets the ZSH_THEME variable
+oh_my_zsh_theme: ""
+# installs and configures the pure shell (https://github.com/sindresorhus/pure)
+oh_my_zsh_enable_pure: true
+### Java
+java_config_enabled: true # Toggle for java configuration
+java_create_symlink_for_system_java: true
+### Git config
+git_configuration_enabled: true # Toggle for git configuration
+git_config_user_name: İbrahim Esen
+git_config_user_email: ibrahim.esen@trendyol.com
+git_config_credential_helper: osxkeychain
+git_aliases:
+  - name: l
+    value: log --graph --pretty=format:"%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset" --abbrev-commit
+  - name: s
+    value: status
+### SSH key management
+ssh_key_management_enabled: true
+# Creates the key if not exists
+ssh_key_git_keys:
+  - name: id_ed25519
+    folder: "{{ user_home_dir }}/.ssh/"
+    alg: ed25519
+    passphrase_exists: false
+### VSCode configuration 
+vscode_customization_enabled: true # Toggle to disable vscode config
+vscode_extensions: 
+  - pkief.material-icon-theme
+  - wholroyd.jinja
+  - editorconfig.editorconfig
+vscode_settings_disable_telemetry: true
+vscode_settings_disable_crash_reporting: true
+vscode_keybindings_file_location: "files/vscode_keybindings.json"
+vscode_terminal_font: "MesloLGSDZ Nerd Font Mono"
+### OSX customization
+osx_customization_enabled: true
+osx_menubar_dateformat: "d MMMM EEE  HH:mm"
+osx_menubar_showday: true
+osx_expand_save_panel: true
+osx_show_status_bar: true
+osx_show_path_bar: true
+osx_show_hidden_files: true
+osx_show_all_file_extensions: true
+osx_enable_file_extension_change_warning: false
+# Finder view modes: clmv, icnv, Nlsv, Flwv
+osx_finder_default_view_style: "clmv"
+osx_terminal_theme: Snazzy
+osx_terminal_theme_url: https://github.com/sindresorhus/terminal-snazzy/raw/main/Snazzy.terminal
+osx_dock_configure: true
+osx_dock_add_apps:
+  - label: Slack
+    app: /Applications/Slack.app/
+  - label: zoom.us
+    app: /Applications/zoom.us.app/
+  - label: Visual Studio Code
+    app: /Applications/Visual Studio Code.app/
+osx_customize_key_bindings: true # Toggle to disable key binding configuration
+osx_keybindings_customizations_file: "files/osx_keybindings.dict"
+### Intellij configuration
+intellij_config_enabled: true # Toggle to disable intellij configuration
+intellij_app_base_folder: "~/Library/Application Support/JetBrains/Toolbox/apps/IDEA-U/ch-0"
+intellij_plugins_to_install:
+  - id: commit-prefix-plugin
+    name: Git Auto Prefix
+    url: "https://plugins.jetbrains.com/plugin/download?rel=true&updateId=117792"

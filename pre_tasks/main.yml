@@ -1,0 +1,15 @@
+---
+- name: "[PRE_TASKS_CASK_SUDO] Check for not installed cask requiring sudo"
+  include_tasks: check_cask_installed.yml
+  loop: "{{ brew_cask_apps_to_install_with_sudo }}"
+
+- name: "[PRE_TASKS_CASK_SUDO] Prompt sudo password"
+  ansible.builtin.pause:
+    prompt: Enter sudo passsword
+    echo: false
+  register: brew_cask_sudo_password
+  when: cask_will_be_installed_with_sudo | default(false)
+
+- name: "[PRE_TASKS_SSH_KEY_PASSPHRASE] Check git key exists on host"
+  include_tasks: ssh_key_passphrase.yml
+  loop: "{{ ssh_key_git_keys }}"

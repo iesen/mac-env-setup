@@ -1,0 +1,31 @@
+---
+- name: "[TERMINAL_THEME] Check terminal theme installed"
+  ansible.builtin.stat:
+    path: "{{ user_home_dir }}/.theme/{{ osx_terminal_theme }}.terminal"
+  register: terminal_file
+  
+- name: "[TERMINAL_THEME] Ensure theme folder exists"
+  ansible.builtin.file: 
+    path: "{{ user_home_dir }}/.theme/"
+    state: directory
+  when: not terminal_file.stat.exists
+
+- name: "[TERMINAL_THEME] Download termimal theme"
+  ansible.builtin.get_url:
+    url: "{{ osx_terminal_theme_url }}"
+    dest: "{{ user_home_dir }}/.theme/{{ osx_terminal_theme }}.terminal"
+    mode: "0744"
+  when: not terminal_file.stat.exists
+
+- name: "[TERMINAL_THEME] Install terminal theme"
+  ansible.builtin.shell: "open '{{ user_home_dir }}/.theme/{{ osx_terminal_theme }}.terminal' -a Terminal"
+  when: not terminal_file.stat.exists
+
+- name: "[TERMINAL_THEME] Set default terminal theme"
+  ansible.builtin.shell: |
+    osascript <<END
+      tell application "Terminal"
+        set default settings to settings set "{{ osx_terminal_theme }}"
+      end tell
+    END
+  when: not terminal_file.stat.exists

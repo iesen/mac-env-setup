@@ -1,0 +1,10 @@
+---
+- hosts: all
+  vars_files:
+    - variables.yml    
+  pre_tasks:
+    - name: Running pre tasks
+      import_tasks: pre_tasks/main.yml
+  roles:
+  - role: dev_mac
+      

@@ -1,0 +1,11 @@
+---
+- name: "[PRE_TASKS_SSH_KEY_PASSPHRASE] Prompt for passphrase of ssk key {{ item.name }}"
+  ansible.builtin.pause:
+    prompt: Enter passphrase for git ssh key {{ item.name }}
+    echo: false
+  register: ssh_key_passphrase
+  when: item.passphrase_exists
+
+- name: "[PRE_TASKS_SSH_KEY_PASSPHRASE] Set passphrase"
+  ansible.builtin.set_fact: "ssh_key_git_passphrase_{{ item.name }}={{ ssh_key_passphrase.user_input | default('') }}"
+  

@@ -1,0 +1,17 @@
+---
+- name: "[INTELLIJ] Find latest intellij app folder"
+  ansible.builtin.find:
+    paths: "{{ intellij_app_base_folder }}"
+    patterns: "*"
+    file_type: directory
+    recurse: false
+  register: intellij_app_folders
+  
+- name: "[INTELLIJ] Set current intellij app folder"
+  ansible.builtin.set_fact:
+    intellij_app_folder: "{{ intellij_app_folders.files | sort(attribute='ctime', reverse=True) | map(attribute='path') | first }}"
+
+- name: "[INTELLIJ] Install intellij plugins"
+  include_tasks: intellij_plugin_install.yml
+  loop: "{{ intellij_plugins_to_install }}"
+  

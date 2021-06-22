@@ -1,0 +1,17 @@
+---
+- name: "[TERMINAL] Install oh-my-zsh"
+  import_tasks: oh_my_zsh_install.yml
+  when: oh_my_zsh_install_enabled
+
+- name: "[TERMINAL] Customize zshrc"
+  import_tasks: custom_zshrc.yml
+
+- name: "[TERMINAL] Configure oh-my-zsh"
+  import_tasks: oh_my_zsh_configure.yml
+  when: oh_my_zsh_configuration_enabled
+
+- name: "[TERMINAL] Configure terminal theme"
+  import_tasks: terminal_theme.yml  
+
+- name: "[TERMINAL] Install powerline fonts"
+  import_tasks: powerline_fonts.yml

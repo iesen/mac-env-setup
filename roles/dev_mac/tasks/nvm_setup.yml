@@ -1,0 +1,13 @@
+---
+- name: "[NVM_SETUP] Ensure nvm directory exists"
+  ansible.builtin.file:
+    path: "{{ user_home_dir }}/.nvm"
+    state: directory
+    
+- name: "[NVM_SETUP] Configure nvm on zshrc"
+  ansible.builtin.blockinfile:
+    path: "{{ user_home_dir }}/.zshrc"
+    marker: "# ##### {mark} TY-ENV-SETUP nvm #####"
+    block: |
+      export NVM_DIR=~/.nvm
+      source $(brew --prefix nvm)/nvm.sh

@@ -1,0 +1,5 @@
+---
+- name: "[BREW_PACKAGE] Install {{ item }}"
+  community.general.homebrew:
+    name: "{{ item }}"
+    state: present

@@ -1,0 +1,10 @@
+---
+- name: "[OSX_CUSTOMIZATION_DOCK_ITEM] Check if app is added"
+  ansible.builtin.shell: "dockutil --find '{{ item.label }}'"
+  changed_when: false
+  ignore_errors: true
+  register: dock_result
+
+- name: "[OSX_CUSTOMIZATION_DOCK_ITEM] Add app to dock"
+  ansible.builtin.shell: "dockutil --add '{{ item.app }}' --label '{{ item.label }}'"
+  when: dock_result.rc != 0

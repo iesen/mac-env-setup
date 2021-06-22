@@ -1,0 +1,6 @@
+---
+- name: "[CASK_INSTALL_SUDO] Install {{ item }} with sudo"
+  community.general.homebrew_cask:
+    name: "{{ item }}"
+    sudo_password: "{{ brew_cask_sudo_password }}"
+    state: present

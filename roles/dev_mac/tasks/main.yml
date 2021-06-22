@@ -1,0 +1,73 @@
+---
+- name: Install apps as sudo
+  include_tasks: cask_install_sudo.yml
+  loop: "{{ brew_cask_apps_to_install_with_sudo }}"
+  tags:
+    - package_install
+    - package_cask
+
+- name: Install apps
+  include_tasks: cask_install.yml
+  loop: "{{ brew_cask_apps_to_install }}"
+  tags:
+    - package_install
+    - package_cask  
+
+- name: Install packages
+  include_tasks: brew_install.yml
+  loop: "{{ brew_packages_to_install }}"
+  tags:
+    - package_install
+    - package
+
+- name: Configure nvm
+  import_tasks: nvm_setup.yml
+  when: "'nvm' in brew_packages_to_install"
+  tags:
+    - dev_tools
+    - nvm
+
+- name: Configure vscode
+  import_tasks: vscode.yml
+  when: vscode_customization_enabled
+  tags:
+    - dev_tools
+    - vscode
+
+- name: Configure java
+  import_tasks: java_env.yml
+  when: java_config_enabled
+  tags:
+    - dev_tools
+    - java
+
+- name: Configure git
+  import_tasks: git.yml
+  when: git_configuration_enabled
+  tags:
+    - dev_tools
+    - git
+
+- name: Configure intellij
+  import_tasks: intellij_configuration.yml
+  when: intellij_config_enabled
+  tags:
+    - dev_tools
+    - intellij
+
+- name: Configure ssh keys
+  import_tasks: ssh_key_configuration.yml
+  when: ssh_key_management_enabled
+  tags:
+    - ssh_key
+    
+- name: Customize osx
+  import_tasks: osx_customization.yml
+  when: osx_customization_enabled
+  tags:
+    - osx
+
+- name: Configure shell and terminal
+  import_tasks: terminal/shell_and_terminal_main.yml
+  tags:
+    - terminal

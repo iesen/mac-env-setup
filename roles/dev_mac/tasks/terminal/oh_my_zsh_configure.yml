@@ -1,0 +1,55 @@
+---
+- name: "[TERMINAL_OH_MY_ZSH_CONFIGURE] Check homebrew"
+  ansible.builtin.command: which brew
+  register: brew_installed
+  ignore_errors: true
+  changed_when: false
+
+- name: "[TERMINAL_OH_MY_ZSH_CONFIGURE] Fail if homebrew not installed"
+  ansible.builtin.fail:
+    msg: Homebrew is required to customize oh-my-zsh
+  when: brew_installed.rc != 0
+
+- name: "[TERMINAL_OH_MY_ZSH_CONFIGURE] Tap nerd fonts"
+  community.general.homebrew_tap:
+    name: homebrew/cask-fonts
+
+- name: "[TERMINAL_OH_MY_ZSH_CONFIGURE] Install nerd fonts"
+  community.general.homebrew_cask:
+    name: "{{ item }}"
+  loop: "{{ oh_my_zsh_nerd_fonts_to_install }}"
+
+- name: "[TERMINAL_OH_MY_ZSH_CONFIGURE] Set zsh theme"
+  ansible.builtin.lineinfile:
+    path: "{{ user_home_dir }}/.zshrc"
+    regexp: "^ZSH_THEME"
+    line: "ZSH_THEME={{ oh_my_zsh_theme }}"
+
+- name: "[TERMINAL_OH_MY_ZSH_CONFIGURE] Install pure"
+  community.general.homebrew:
+    name: pure
+  when: oh_my_zsh_enable_pure
+
+- name: "[TERMINAL_OH_MY_ZSH_CONFIGURE] Enable pure in zsh config"
+  ansible.builtin.blockinfile:
+    dest: "{{ user_home_dir }}/.zshrc"
+    marker: "# ##### {mark} TY-ENV-SETUP (Pure shell theme) #####"
+    block: |
+      autoload -U promptinit; promptinit
+      prompt pure
+      {% if 'kube-ps1' in zsh_plugins_enabled %}
+      RPROMPT='$(kube_ps1)''[%T] '$RPROMPT
+      {% else %}
+      RPROMPT='[%T] '$RPROMPT
+      {% endif %}
+  when: oh_my_zsh_enable_pure
+
+- name: "[TERMINAL_OH_MY_ZSH_CONFIGURE] Download zsh plugins to install"
+  include_tasks: download_zsh_plugin.yml
+  loop: "{{ oh_my_zsh_plugins_to_install }}"
+
+- name: "[TERMINAL_OH_MY_ZSH_CONFIGURE] Configure zsh plugins in zshrc"
+  ansible.builtin.lineinfile:
+    path: "{{ user_home_dir }}/.zshrc"
+    regexp: "^plugins"
+    line: "plugins=({{ zsh_plugins_enabled | join(' ') }})"

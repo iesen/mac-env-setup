@@ -1,0 +1,23 @@
+---
+- name: "[TERMINAL_POWERLINE] Check powerline fonts installed"
+  ansible.builtin.stat:
+    path: "{{ user_home_dir }}/.font/sources/.powerline_fonts_installed"
+  register: powerline_installed
+
+- name: "[TERMINAL_POWERLINE] Clone powerline patched fonts"
+  ansible.builtin.git:
+    repo: https://github.com/powerline/fonts.git
+    dest: "{{ user_home_dir }}/.font/sources/powerline_fonts"
+    depth: 1
+    version: master
+  when: not powerline_installed.stat.exists
+
+- name: "[TERMINAL_POWERLINE] Run powerline installer"
+  ansible.builtin.shell: "sh {{ user_home_dir }}/.font/sources/powerline_fonts/install.sh"
+  when: not powerline_installed.stat.exists
+
+- name: "[TERMINAL_POWERLINE] Mark powerline fonts installed"
+  ansible.builtin.file:
+    path: "{{ user_home_dir }}/.font/sources/.powerline_fonts_installed"
+    state: touch
+  when: not powerline_installed.stat.exists

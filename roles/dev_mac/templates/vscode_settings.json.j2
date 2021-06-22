@@ -1,0 +1,10 @@
+{
+    "workbench.iconTheme": "material-icon-theme",
+    {% if vscode_settings_disable_crash_reporting %}    
+    "telemetry.enableCrashReporter": false,
+    {% endif %}
+    {% if vscode_settings_disable_telemetry %}
+    "telemetry.enableTelemetry": false,
+    {% endif %}
+    "terminal.integrated.fontFamily": "{{ vscode_terminal_font | default('Menlo') }}"
+}

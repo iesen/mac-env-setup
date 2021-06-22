@@ -1,0 +1,6 @@
+---
+- name: Menubar changed
+  ansible.builtin.command: killall -KILL SystemUIServer
+
+- name: Restart finder
+  ansible.builtin.command: killall -KILL Finder

@@ -1,0 +1,14 @@
+---
+- name: "[VS_CODE] Install vscode extension"
+  include_tasks: vscode_extension.yml
+  loop: "{{ vscode_extensions }}"
+
+- name: "[VS_CODE] Install vscode user settings"
+  ansible.builtin.template:
+    src: vscode_settings.json.j2
+    dest: "{{ user_home_dir }}/Library/Application Support/Code/User/settings.json"
+
+- name: "[VS_CODE] Copy vscode keybindings"
+  ansible.builtin.copy:
+    src: "{{ vscode_keybindings_file_location }}"
+    dest: "{{ user_home_dir }}/Library/Application Support/Code/User/keybindings.json"

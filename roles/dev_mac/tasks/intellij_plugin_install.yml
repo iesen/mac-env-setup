@@ -1,0 +1,30 @@
+---
+- name: "[INTELLIJ_PLUGIN] Check plugin is installed"
+  ansible.builtin.stat:
+    path: "{{ intellij_app_folder }}/IntelliJ IDEA.app.plugins/{{ item.id }}"
+  register: plugin_folder
+
+- name: "[INTELLIJ_PLUGIN] Ensure plugin directory exists"
+  ansible.builtin.file:
+    path: "{{ intellij_app_folder }}/IntelliJ IDEA.app.plugins"
+    state: directory
+  when: not plugin_folder.stat.exists
+
+- name: "[INTELLIJ_PLUGIN] Download plugin"
+  ansible.builtin.get_url:
+    url: "{{ item.url }}"
+    dest: "{{ intellij_app_folder }}/IntelliJ IDEA.app.plugins/{{ item.id }}.zip"
+  when: not plugin_folder.stat.exists
+
+- name: "[INTELLIJ_PLUGIN] Unarchive plugin"
+  ansible.builtin.unarchive:
+    src: "{{ intellij_app_folder }}/IntelliJ IDEA.app.plugins/{{ item.id }}.zip"
+    dest: "{{ intellij_app_folder }}/IntelliJ IDEA.app.plugins"
+    copy: false
+  when: not plugin_folder.stat.exists
+
+- name: "[INTELLIJ_PLUGIN] Cleanup download plugin zip"
+  ansible.builtin.file:
+    path: "{{ intellij_app_folder }}/IntelliJ IDEA.app.plugins/{{ item.id }}.zip"
+    state: absent
+  when: not plugin_folder.stat.exists

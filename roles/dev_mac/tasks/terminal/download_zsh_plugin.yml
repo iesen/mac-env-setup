@@ -1,0 +1,11 @@
+---
+- name: "[TERMINAL_ZSH_PLUGIN] Check if zsh plugin is already downloaded"
+  ansible.builtin.stat:
+    path: "{{ user_home_dir }}/.oh-my-zsh/custom/plugins/{{ item.name }}"
+  register: plugin_path
+
+- name: "[TERMINAL_ZSH_PLUGIN] Download zsh plugin to install"
+  ansible.builtin.git:
+    repo: "{{ item.url }}"
+    dest: "{{ user_home_dir }}/.oh-my-zsh/custom/plugins/{{ item.name }}"
+  when: not plugin_path.stat.exists
