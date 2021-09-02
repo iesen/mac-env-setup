@@ -18,6 +18,12 @@ brew_cask_apps_to_install:
   - brave-browser
   - postman
   - docker
+  - alfred
+  - lens
+  - meld
+# Brew casks to tap
+brew_packages_casks_to_tap:
+  - spring-io/tap
 # Brew packages to install
 brew_packages_to_install:
   - git
@@ -30,6 +36,7 @@ brew_packages_to_install:
   - jq
   - pygments
   - k9s
+  - spring-boot
 ### zsh configuration
 zsh_configure_pyenv_init: true
 zsh_configure_nomatch: true
@@ -96,6 +103,8 @@ vscode_extensions:
   - pkief.material-icon-theme
   - wholroyd.jinja
   - editorconfig.editorconfig
+  - ms-vscode-remote.remote-containers
+  - ms-azuretools.vscode-docker
 vscode_settings_disable_telemetry: true
 vscode_settings_disable_crash_reporting: true
 vscode_keybindings_file_location: "files/vscode_keybindings.json"
@@ -131,3 +140,9 @@ intellij_plugins_to_install:
   - id: commit-prefix-plugin
     name: Git Auto Prefix
     url: "https://plugins.jetbrains.com/plugin/download?rel=true&updateId=117792"
+  - id: handlebars
+    name: Handlebars/Mustashe
+    url: "https://plugins.jetbrains.com/plugin/download?rel=true&updateId=126514"
+  - id: sonarlint
+    name: SonarLint
+    url: "https://plugins.jetbrains.com/plugin/download?rel=true&updateId=123443"
