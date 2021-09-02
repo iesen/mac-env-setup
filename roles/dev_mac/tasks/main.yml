@@ -3,22 +3,25 @@
   include_tasks: cask_install_sudo.yml
   loop: "{{ brew_cask_apps_to_install_with_sudo }}"
   tags:
-    - package_install
     - package_cask
 
 - name: Install apps
   include_tasks: cask_install.yml
   loop: "{{ brew_cask_apps_to_install }}"
   tags:
-    - package_install
     - package_cask  
+
+- name: Install taps
+  include_tasks: brew_tap.yml
+  loop: "{{ brew_packages_casks_to_tap }}"
+  tags:
+    - package_tap
 
 - name: Install packages
   include_tasks: brew_install.yml
   loop: "{{ brew_packages_to_install }}"
   tags:
     - package_install
-    - package
 
 - name: Configure nvm
   import_tasks: nvm_setup.yml

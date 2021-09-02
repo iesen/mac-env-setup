@@ -1,0 +1,4 @@
+---
+- name: "[BREW_TAP] Tap {{ item }}"
+  community.general.homebrew_tap:
+    name: "{{ item }}"

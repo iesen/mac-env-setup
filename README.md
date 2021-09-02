@@ -73,7 +73,7 @@ Your sudo password may be asked for multiple times. (if you have cask with sudo)
 
 You can also run only some parts of the playbook by specifying tags
 ```
-ansible-playbook -i inventory main.yml --tags "package,vscode"
+ansible-playbook -i inventory main.yml --tags "package_install,vscode"
 ```
 ## Customization
 You can customize tasks with _variables.yml_ file.
@@ -83,7 +83,7 @@ You can customize tasks with _variables.yml_ file.
 ![Image of my terminal](https://raw.githubusercontent.com/iesen/mac-env-setup/main/ss.png)
 
 ## Future work
-* Playbook for updating pacakges and software (with version options)
+* Playbook for updating packages and software (with version options)
 
 ## Notes
 Installed and available fonts can be viewed via
